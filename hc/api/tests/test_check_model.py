@@ -456,3 +456,19 @@ class CheckModelTestCase(BaseTestCase):
 
         # rename_and_delete should handle an already deleted check gracefully:
         same_check.rename_and_delete()
+
+
+    @override_settings(PING_ENDPOINT="https://hc.test/ping/")
+    def test_url_returns_slug_url_when_show_slugs_enabled(self) -> None:
+        self.project.show_slugs = True
+        self.project.ping_key = "k"
+        self.project.save()
+
+        check = Check.objects.create(project=self.project, slug="a")
+
+        self.assertEqual(check.url(), "https://hc.test/ping/k/a")
+
+
+
+
+    
