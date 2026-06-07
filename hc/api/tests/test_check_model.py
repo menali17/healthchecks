@@ -509,6 +509,19 @@ class CheckModelTestCase(BaseTestCase):
 
         self.assertEqual(check.url(), f"https://hc.test/ping/{check.code}")
 
+    @patch.object(Check, "get_grace_start", return_value=None)
+    def test_get_status_returns_up_when_grace_start_is_none(self, mock_get_grace_start: Mock) -> None:
+        check = Check(status="up")
+
+        self.assertEqual(check.get_status(), "up")
+        mock_get_grace_start.assert_called_once_with(with_started=False)
+
+    @patch.object(Check, "get_grace_start", return_value=None)
+    def test_get_status_returns_up_when_grace_start_is_none(self, mock_get_grace_start: Mock) -> None:
+        check = Check(status="up")
+
+        self.assertEqual(check.get_status(), "up")
+        mock_get_grace_start.assert_called_once_with(with_started=False)
 
 
     
