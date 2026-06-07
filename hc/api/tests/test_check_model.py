@@ -499,5 +499,16 @@ class CheckModelTestCase(BaseTestCase):
         self.assertEqual(check.url(), "https://hc.test/ping/{ping_key}/meuslug")
 
 
+    @override_settings(PING_ENDPOINT="https://hc.test/ping/")
+    def test_url_returns_code_url_when_show_slugs_disabled(self) -> None:
+        self.project.show_slugs = False
+        self.project.ping_key = "k"
+        self.project.save()
+
+        check = Check.objects.create(project=self.project, slug="meuslug")
+
+        self.assertEqual(check.url(), f"https://hc.test/ping/{check.code}")
+
+
 
     
