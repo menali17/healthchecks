@@ -509,12 +509,12 @@ class CheckModelTestCase(BaseTestCase):
 
         self.assertEqual(check.url(), f"https://hc.test/ping/{check.code}")
 
-    @patch.object(Check, "get_grace_start", return_value=None)
-    def test_get_status_returns_up_when_grace_start_is_none(self, mock_get_grace_start: Mock) -> None:
+    def test_get_status_ignores_recent_start_when_with_started_is_false(self) -> None:
         check = Check(status="up")
+        check.last_ping = now() - td(hours=2)
+        check.last_start = now() - td(minutes=5)
 
-        self.assertEqual(check.get_status(), "up")
-        mock_get_grace_start.assert_called_once_with(with_started=False)
+        self.assertEqual(check.get_status(with_started=False), "up")
 
     @patch.object(Check, "get_grace_start", return_value=None)
     def test_get_status_returns_up_when_grace_start_is_none(self, mock_get_grace_start: Mock) -> None:
