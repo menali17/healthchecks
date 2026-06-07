@@ -468,6 +468,15 @@ class CheckModelTestCase(BaseTestCase):
 
         self.assertEqual(check.url(), "https://hc.test/ping/k/a")
 
+    @override_settings(PING_ENDPOINT="https://hc.test/ping/")
+    def test_url_returns_none_when_slug_is_empty(self) -> None:
+        self.project.show_slugs = True
+        self.project.ping_key = "k"
+        self.project.save()
+
+        check = Check.objects.create(project=self.project, slug="")
+
+        self.assertIsNone(check.url())
 
 
 
